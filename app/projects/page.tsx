@@ -18,13 +18,21 @@ export default function ProjectsPage() {
       {/* LightRays + ambient glow background */}
       <PageBackground raysColor="#60a5fa" opacity={0.25} />
 
+      {/* Smooth top gradient buffer — blends with navbar */}
+      <div aria-hidden style={{
+        position: "relative", zIndex: 1,
+        height: "clamp(1.5rem, 4vw, 3rem)",
+        background: "linear-gradient(180deg, var(--surface) 0%, transparent 100%)",
+        pointerEvents: "none",
+      }} />
+
       {/* ── Page Header ────────────────────────────────────────── */}
       <header
         style={{
           position: "relative",
           zIndex: 1,
           borderBottom: "1px solid var(--border)",
-          background: "linear-gradient(180deg, rgba(19,19,22,0.9) 0%, transparent 100%)",
+          background: "linear-gradient(180deg, rgba(19,19,22,0.6) 0%, transparent 100%)",
         }}
       >
         <div

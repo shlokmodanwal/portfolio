@@ -29,13 +29,21 @@ export function ExperiencePageClient({ experience }: Props) {
       {/* LightRays + ambient glow background */}
       <PageBackground raysColor="#c4b5fd" opacity={0.22} glowTopLeft="rgba(96,165,250,0.05)" glowTopRight="rgba(167,139,250,0.05)" />
 
+      {/* Smooth top gradient buffer */}
+      <div aria-hidden style={{
+        position: "relative", zIndex: 1,
+        height: "clamp(1.5rem, 4vw, 3rem)",
+        background: "linear-gradient(180deg, var(--surface) 0%, transparent 100%)",
+        pointerEvents: "none",
+      }} />
+
       {/* ── Page Header ──────────────────────────────────── */}
       <div style={{
         position: "relative", zIndex: 1,
         borderBottom: "1px solid var(--border)",
-        background: "linear-gradient(180deg, var(--surface) 0%, transparent 100%)",
+        background: "linear-gradient(180deg, rgba(19,19,22,0.6) 0%, transparent 100%)",
       }}>
-        <div className="container" style={{ paddingTop: "4rem", paddingBottom: "3.5rem" }}>
+        <div className="container" style={{ paddingTop: "3rem", paddingBottom: "3.5rem" }}>
           <div className="section-label-line" style={{ marginBottom: "1.5rem" }}>
             <span className="label">Career</span>
           </div>
