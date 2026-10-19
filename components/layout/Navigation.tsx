@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X, Home, Code2, Briefcase, Award, Mail, ArrowUpRight } from "lucide-react";
 import { links } from "@/data/links";
+import { siteConfig } from "@/data/site";
 
 const NAV_LINKS = [
   { href: "/projects",       label: "Projects"      },
@@ -16,11 +17,10 @@ const NAV_LINKS = [
 
 // Mobile sidebar links with icons + numbers
 const MOBILE_MAIN = [
-  { href: "/",               label: "Home",           Icon: Home,     num: 1 },
-  { href: "/projects",       label: "Projects",       Icon: Code2,    num: 2 },
-  { href: "/experience",     label: "Experience",     Icon: Briefcase,num: 3 },
-  { href: "/certifications", label: "Certifications", Icon: Award,    num: 4 },
-  { href: "/contact",        label: "Contact",        Icon: Mail,     num: 5 },
+  { href: "/",               label: "Home",           Icon: Home,     num: 1, external: false },
+  { href: "/projects",       label: "Projects",       Icon: Code2,    num: 2, external: false },
+  { href: "/experience",     label: "Experience",     Icon: Briefcase,num: 3, external: false },
+  { href: "/certifications", label: "Certifications", Icon: Award,    num: 4, external: false },
 ] as const;
 
 type NavHref = (typeof NAV_LINKS)[number]["href"];
@@ -73,7 +73,7 @@ export function Navigation() {
   return (
     <>
       {/* ── Desktop horizontal nav ───────────────────────────── */}
-      <div className="hidden md:flex items-center gap-5">
+      <div className="hidden sm:flex items-center gap-5">
         <div ref={navRef} style={{ position:"relative" }} onMouseLeave={() => setBracket(p => ({ ...p, visible:false }))}>
           {/* Bracket — theme aware */}
           <div aria-hidden style={{
@@ -111,7 +111,7 @@ export function Navigation() {
       </div>
 
       {/* ── Mobile hamburger ─────────────────────────────────── */}
-      <button type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="mobile-menu" aria-label="Open menu" className="md:hidden"
+      <button type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="mobile-menu" aria-label="Open menu" className="sm:hidden"
         style={{ background:"none", border:"1px solid var(--border)", cursor:"pointer", color:"var(--text-2)", display:"flex", alignItems:"center", padding:"0.3rem", borderRadius:"var(--radius)", transition:"border-color var(--dur-fast) ease, color var(--dur-fast) ease" }}
         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor="var(--border-hover)"; (e.currentTarget as HTMLElement).style.color="var(--text-1)"; }}
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor="var(--border)"; (e.currentTarget as HTMLElement).style.color="var(--text-2)"; }}>
@@ -147,25 +147,40 @@ export function Navigation() {
               {/* Nav items — icon + label + number */}
               <nav style={{ flex:1, padding:"0.875rem 0.75rem", overflowY:"auto" }} aria-label="Mobile navigation">
                 <ul role="list" style={{ listStyle:"none", display:"flex", flexDirection:"column", gap:"2px" }}>
-                  {MOBILE_MAIN.map(({ href, label, Icon, num }, i) => {
-                    const active = isActive(pathname, href);
-                    return (
-                      <motion.li key={href} initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.22, delay:0.04+i*0.045, ease:[0.16,1,0.3,1] }}>
-                        <Link href={href} onClick={close}
-                          style={{ display:"flex", alignItems:"center", gap:"0.625rem", padding:"0.55rem 0.625rem", borderRadius:"8px", textDecoration:"none", background:active?"rgba(255,255,255,0.07)":"transparent", transition:"background var(--dur-fast) ease" }}
-                          onMouseEnter={e => { if(!active)(e.currentTarget as HTMLElement).style.background="rgba(255,255,255,0.04)"; }}
-                          onMouseLeave={e => { if(!active)(e.currentTarget as HTMLElement).style.background="transparent"; }}>
-                          <Icon size={15} strokeWidth={active?2:1.5} style={{ color:active?"var(--text-1)":"var(--text-3)", flexShrink:0 }} />
-                          <span style={{ flex:1, fontSize:"14px", fontWeight:active?500:400, color:active?"var(--text-1)":"var(--text-2)", letterSpacing:"-0.01em" }}>
-                            {label}
-                          </span>
-                          <span style={{ fontSize:"11px", fontFamily:"var(--font-mono)", color:"var(--text-4)" }}>
-                            {num}
-                          </span>
-                        </Link>
-                      </motion.li>
-                    );
-                  })}
+              {MOBILE_MAIN.map(({ href, label, Icon, num }, i) => {
+                  const active = isActive(pathname, href);
+                  return (
+                    <motion.li key={href} initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.22, delay:0.04+i*0.045, ease:[0.16,1,0.3,1] }}>
+                      <Link href={href} onClick={close}
+                        style={{ display:"flex", alignItems:"center", gap:"0.625rem", padding:"0.55rem 0.625rem", borderRadius:"8px", textDecoration:"none", background:active?"rgba(255,255,255,0.07)":"transparent", transition:"background var(--dur-fast) ease" }}
+                        onMouseEnter={e => { if(!active)(e.currentTarget as HTMLElement).style.background="rgba(255,255,255,0.04)"; }}
+                        onMouseLeave={e => { if(!active)(e.currentTarget as HTMLElement).style.background="transparent"; }}>
+                        <Icon size={15} strokeWidth={active?2:1.5} style={{ color:active?"var(--text-1)":"var(--text-3)", flexShrink:0 }} />
+                        <span style={{ flex:1, fontSize:"14px", fontWeight:active?500:400, color:active?"var(--text-1)":"var(--text-2)", letterSpacing:"-0.01em" }}>
+                          {label}
+                        </span>
+                        <span style={{ fontSize:"11px", fontFamily:"var(--font-mono)", color:"var(--text-4)" }}>
+                          {num}
+                        </span>
+                      </Link>
+                    </motion.li>
+                  );
+                })}
+                {/* Email — direct mailto link */}
+                <motion.li initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.22, delay:0.04+MOBILE_MAIN.length*0.045, ease:[0.16,1,0.3,1] }}>
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    onClick={close}
+                    style={{ display:"flex", alignItems:"center", gap:"0.625rem", padding:"0.55rem 0.625rem", borderRadius:"8px", textDecoration:"none", background:"transparent", transition:"background var(--dur-fast) ease" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background="rgba(255,255,255,0.04)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background="transparent"; }}>
+                    <Mail size={15} strokeWidth={1.5} style={{ color:"var(--text-3)", flexShrink:0 }} />
+                    <span style={{ flex:1, fontSize:"14px", fontWeight:400, color:"var(--text-2)", letterSpacing:"-0.01em" }}>
+                      Email Me
+                    </span>
+                    <span style={{ fontSize:"11px", fontFamily:"var(--font-mono)", color:"var(--text-4)" }}>6</span>
+                  </a>
+                </motion.li>
                 </ul>
               </nav>
 

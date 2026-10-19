@@ -27,6 +27,7 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-name"
+      className="hero-section"
       style={{
         position: "relative",
         minHeight: "calc(100dvh - var(--header-height))",
@@ -107,7 +108,7 @@ export function Hero() {
 
       {/* ── Content overlay ─────────────────────────────────── */}
       <div
-        className="container"
+        className="container hero-content-container"
         style={{
           position: "relative",
           zIndex: 3,
@@ -244,11 +245,26 @@ export function Hero() {
             opacity: 0.35 !important;
           }
         }
+
         @media (max-width: 640px) {
+          /* Stack: avatar on top, content below */
+          .hero-section {
+            justify-content: flex-start !important;
+          }
           .hero-portrait {
+            position: relative !important;
             width: 100% !important;
-            right: -15% !important;
-            opacity: 0.2 !important;
+            height: 380px !important;
+            right: auto !important;
+            bottom: auto !important;
+            top: auto !important;
+            opacity: 1 !important;
+            flex-shrink: 0;
+            overflow: hidden !important;
+          }
+          .hero-content-container {
+            padding-top: 2rem !important;
+            padding-bottom: 3rem !important;
           }
         }
       `}</style>

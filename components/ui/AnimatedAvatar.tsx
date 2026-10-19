@@ -54,15 +54,9 @@ export function AnimatedAvatar() {
       const delay = BLINK_MIN + Math.random() * (BLINK_MAX - BLINK_MIN);
       timeout = setTimeout(() => {
         setIsBlinking(true);
-        const isDouble = Math.random() < 0.2;
         setTimeout(() => {
           setIsBlinking(false);
-          if (isDouble) {
-            setTimeout(() => {
-              setIsBlinking(true);
-              setTimeout(() => { setIsBlinking(false); schedule(); }, BLINK_DURATION);
-            }, 120);
-          } else { schedule(); }
+          schedule();
         }, BLINK_DURATION);
       }, delay);
     }

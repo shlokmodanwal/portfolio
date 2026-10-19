@@ -11,6 +11,12 @@ const typeColors: Record<string, { color: string; bg: string; border: string }> 
   "contract":   { color: "#fde68a", bg: "rgba(251,191,36,0.08)",  border: "rgba(251,191,36,0.2)"  },
 };
 
+/** Badge-specific colour overrides for custom labels */
+const badgeColors: Record<string, { color: string; bg: string; border: string }> = {
+  "LEADERSHIP":          { color: "#c4b5fd", bg: "rgba(167,139,250,0.10)", border: "rgba(167,139,250,0.25)" },
+  "DESIGN & LEADERSHIP": { color: "#f9a8d4", bg: "rgba(244,114,182,0.10)", border: "rgba(244,114,182,0.25)" },
+};
+
 function formatDate(date: string) {
   if (date === "present") return "Present";
   const [y, m] = date.split("-");
@@ -75,6 +81,9 @@ export function ExperiencePageClient({ experience }: Props) {
         <div style={{ maxWidth: "58rem" }}>
           {experience.map((item, i) => {
             const tc = typeColors[item.type] ?? typeColors["internship"];
+            // Use custom badge colour when a badge label is defined
+            const bc = item.badge ? (badgeColors[item.badge] ?? tc) : tc;
+            const badgeLabel = item.badge ?? item.type;
             const isLast = i === experience.length - 1;
             const realHighlights = item.highlights.filter(h => !h.startsWith("TODO"));
 
@@ -142,10 +151,10 @@ export function ExperiencePageClient({ experience }: Props) {
                           display: "inline-flex", alignItems: "center", padding: "3px 10px",
                           borderRadius: "99px", fontSize: "10px", fontWeight: 700,
                           letterSpacing: "0.05em", textTransform: "uppercase",
-                          background: tc.bg, color: tc.color, border: `1px solid ${tc.border}`,
+                          background: bc.bg, color: bc.color, border: `1px solid ${bc.border}`,
                           fontFamily: "var(--font-mono)",
                         }}>
-                          {item.type}
+                          {badgeLabel}
                         </span>
                         <span className="mono" style={{ color: "var(--text-3)", textAlign: "right" }}>
                           {formatDate(item.startDate)} → {formatDate(item.endDate)}

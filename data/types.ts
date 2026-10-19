@@ -65,6 +65,8 @@ export interface ExperienceItem {
   companyLogo?: string;
   role: string;
   type: "full-time" | "part-time" | "contract" | "internship" | "freelance";
+  /** Optional custom badge label to display instead of type */
+  badge?: string;
   /** ISO date string e.g. "2022-06" */
   startDate: string;
   /** ISO date string or "present" */
